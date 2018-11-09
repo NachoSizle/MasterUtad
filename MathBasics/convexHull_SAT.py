@@ -273,7 +273,7 @@ def calcCollision(polygon_list):
 
         # Repetir los 3 pasos anteriores con el otro polígono en el mismo eje de proyeccion
         # Comprobar si los extremos del primer poligono pertenecen al conjunto de puntos del segundo poligono
-
+    res = False
     polygon = polygon_list[0]
     first_sides = polygon.get_sides()
     polygon = polygon_list[1]
@@ -284,6 +284,7 @@ def calcCollision(polygon_list):
         init_side = side
 
         plane_proyection.vec = init_side.change_vector()
+        all_coordenates_polygon_one = []
         min_proy_first_polygon = 0.0
         max_proy_first_polygon = 0.0
 
@@ -302,6 +303,7 @@ def calcCollision(polygon_list):
             if result[1] > max_proy_first_polygon:
                 max_proy_first_polygon = result[1]
 
+            all_coordenates_polygon_one.append(result)
             # print("SIDE: {}".format(test_side))
             # print("PLANE: {}".format(plane_proyection))
             # print("X COOR PLANE: {}".format(plane_proyection.vec[0]))
@@ -310,6 +312,7 @@ def calcCollision(polygon_list):
             # print("DENOMINATOR: {}".format(mod_plane))
             # print("************************************")
 
+        all_coordenates_polygon_two = []
         min_proy_second_polygon = 0.0
         max_proy_second_polygon = 0.0
         for test_side in second_sides:
@@ -327,6 +330,8 @@ def calcCollision(polygon_list):
             if result[1] > max_proy_second_polygon:
                 max_proy_second_polygon = result[1]
 
+            all_coordenates_polygon_two.append(result)
+
             # print("SIDE: {}".format(test_side))
             # print("PLANE: {}".format(plane_proyection))
             # print("X COOR PLANE: {}".format(plane_proyection.vec[0]))
@@ -334,24 +339,35 @@ def calcCollision(polygon_list):
             # print("NUMERATOR: {}".format(numer))
             # print("DENOMINATOR: {}".format(mod_plane))
             # print("************************************")
-        print("RESULT: [{}, {}]".format(
-            min_proy_first_polygon, max_proy_first_polygon))
-        print("RESULT: [{}, {}]".format(
-            min_proy_second_polygon, max_proy_second_polygon))
+        first_polygon = [min_proy_first_polygon, max_proy_first_polygon]
+        second_polygon = [min_proy_second_polygon, max_proy_second_polygon]
         print("************************************")
-        # PROYECTAR EL SEGUNDO POLIGUNO SOBRE plane_proyection Y VER SI COLISIONAN
+        print("POLYGON ONE RESULT: {}".format(all_coordenates_polygon_one))
+        print("POLYGON TWO RESULT: {}".format(all_coordenates_polygon_two))
+        print("RESULT ONE: {}".format(first_polygon))
+        print("RESULT TWO: {}".format(second_polygon))
+        print("************************************")
+        res = check_collision(first_polygon, second_polygon)
+        if res:
+            break
+    return res
 
 
-# ******************** INIT PROGRAM ******************
+def check_collision(polygon_one, polygon_two):
+    collision = False
+
+    return collision
+
+    # ******************** INIT PROGRAM ******************
 polygon_list = []
 for i in range(2):
     point_list = []
 
     for x in range(6):
-        # point = Point(random.randint((10 * i) - 3 * i, 10 * (i + 1)),
-        #               random.randint(10 * i, 10 * (i + 1)))
-        point = Point(random.randint(0, 30),
-                      random.randint(0, 30))
+        point = Point(random.randint((10 * i) - 3 * i, 10 * (i + 1)),
+                      random.randint(10 * i, 10 * (i + 1)))
+        # point = Point(random.randint(0, 30),
+        #               random.randint(0, 30))
         point_list.append(point)
 
     polygon = Polygon(point_list)

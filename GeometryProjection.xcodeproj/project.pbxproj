@@ -7,7 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		43A2362D219EF4410000657C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43A2362C219EF4410000657C /* main.cpp */; };
+		4393EA51219EF7B0006BA5AC /* camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4393EA49219EF7B0006BA5AC /* camera.cpp */; };
+		4393EA52219EF7B0006BA5AC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4393EA4B219EF7B0006BA5AC /* main.cpp */; };
+		4393EA53219EF7B0006BA5AC /* shapes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4393EA4E219EF7B0006BA5AC /* shapes.cpp */; };
+		4393EA54219EF7B0006BA5AC /* math3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4393EA50219EF7B0006BA5AC /* math3d.cpp */; };
+		4393EA55219EF7BE006BA5AC /* camera.h in Sources */ = {isa = PBXBuildFile; fileRef = 4393EA4A219EF7B0006BA5AC /* camera.h */; };
+		4393EA56219EF7BE006BA5AC /* GLInclude.h in Sources */ = {isa = PBXBuildFile; fileRef = 4393EA4C219EF7B0006BA5AC /* GLInclude.h */; };
+		4393EA57219EF7BE006BA5AC /* math3d.h in Sources */ = {isa = PBXBuildFile; fileRef = 4393EA4D219EF7B0006BA5AC /* math3d.h */; };
+		4393EA58219EF7BE006BA5AC /* shapes.h in Sources */ = {isa = PBXBuildFile; fileRef = 4393EA4F219EF7B0006BA5AC /* shapes.h */; };
+		43A23641219EF5160000657C /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A23640219EF5160000657C /* GLUT.framework */; };
+		43A23643219EF51D0000657C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A23642219EF51D0000657C /* OpenGL.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +32,17 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4393EA49219EF7B0006BA5AC /* camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = camera.cpp; sourceTree = "<group>"; };
+		4393EA4A219EF7B0006BA5AC /* camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = camera.h; sourceTree = "<group>"; };
+		4393EA4B219EF7B0006BA5AC /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		4393EA4C219EF7B0006BA5AC /* GLInclude.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLInclude.h; sourceTree = "<group>"; };
+		4393EA4D219EF7B0006BA5AC /* math3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = math3d.h; sourceTree = "<group>"; };
+		4393EA4E219EF7B0006BA5AC /* shapes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shapes.cpp; sourceTree = "<group>"; };
+		4393EA4F219EF7B0006BA5AC /* shapes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shapes.h; sourceTree = "<group>"; };
+		4393EA50219EF7B0006BA5AC /* math3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = math3d.cpp; sourceTree = "<group>"; };
 		43A23629219EF4410000657C /* GeometryProyection */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GeometryProyection; sourceTree = BUILT_PRODUCTS_DIR; };
-		43A2362C219EF4410000657C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		43A23640219EF5160000657C /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		43A23642219EF51D0000657C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +50,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				43A23643219EF51D0000657C /* OpenGL.framework in Frameworks */,
+				43A23641219EF5160000657C /* GLUT.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,8 +61,9 @@
 		43A23620219EF4410000657C = {
 			isa = PBXGroup;
 			children = (
-				43A2362B219EF4410000657C /* GeometryProyection */,
+				43A2362B219EF4410000657C /* GeometryProjection */,
 				43A2362A219EF4410000657C /* Products */,
+				43A2363F219EF5150000657C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -54,12 +75,28 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		43A2362B219EF4410000657C /* GeometryProyection */ = {
+		43A2362B219EF4410000657C /* GeometryProjection */ = {
 			isa = PBXGroup;
 			children = (
-				43A2362C219EF4410000657C /* main.cpp */,
+				4393EA49219EF7B0006BA5AC /* camera.cpp */,
+				4393EA4A219EF7B0006BA5AC /* camera.h */,
+				4393EA4C219EF7B0006BA5AC /* GLInclude.h */,
+				4393EA4B219EF7B0006BA5AC /* main.cpp */,
+				4393EA50219EF7B0006BA5AC /* math3d.cpp */,
+				4393EA4D219EF7B0006BA5AC /* math3d.h */,
+				4393EA4E219EF7B0006BA5AC /* shapes.cpp */,
+				4393EA4F219EF7B0006BA5AC /* shapes.h */,
 			);
-			path = GeometryProyection;
+			path = GeometryProjection;
+			sourceTree = "<group>";
+		};
+		43A2363F219EF5150000657C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				43A23642219EF51D0000657C /* OpenGL.framework */,
+				43A23640219EF5160000657C /* GLUT.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -96,7 +133,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 43A23624219EF4410000657C /* Build configuration list for PBXProject "GeometryProyection" */;
+			buildConfigurationList = 43A23624219EF4410000657C /* Build configuration list for PBXProject "GeometryProjection" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -118,7 +155,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				43A2362D219EF4410000657C /* main.cpp in Sources */,
+				4393EA55219EF7BE006BA5AC /* camera.h in Sources */,
+				4393EA56219EF7BE006BA5AC /* GLInclude.h in Sources */,
+				4393EA57219EF7BE006BA5AC /* math3d.h in Sources */,
+				4393EA58219EF7BE006BA5AC /* shapes.h in Sources */,
+				4393EA54219EF7B0006BA5AC /* math3d.cpp in Sources */,
+				4393EA52219EF7B0006BA5AC /* main.cpp in Sources */,
+				4393EA51219EF7B0006BA5AC /* camera.cpp in Sources */,
+				4393EA53219EF7B0006BA5AC /* shapes.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,7 +301,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		43A23624219EF4410000657C /* Build configuration list for PBXProject "GeometryProyection" */ = {
+		43A23624219EF4410000657C /* Build configuration list for PBXProject "GeometryProjection" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				43A2362E219EF4410000657C /* Debug */,

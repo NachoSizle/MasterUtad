@@ -15,7 +15,6 @@ typedef struct {
     double x,y,z;
 } VECTOR3D;
 
-
 typedef struct {
     double r,g,b;
 } COLOUR;

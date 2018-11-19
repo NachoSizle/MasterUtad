@@ -92,7 +92,10 @@ VECTOR3D Transform(MATRIX3 m, VECTOR3D a) {
 	res.z = ((m.column0.z * a.x) + (m.column1.z * a.y) + (m.column2.z * a.z));
 	return res;
 }
-//QUATERNION QuaternionFromAngleAxis(float angle, VECTOR3D axis){}
+QUATERNION QuaternionFromAngleAxis(float angle, VECTOR3D axis){
+    VECTOR3D norm = Normalized(axis);
+    
+}
 //QUATERNION Multiply(QUATERNION a, QUATERNION b) {}
 //QUATERNION Conjugate(QUATERNION a) {}
 //VECTOR3D RotateWithQuaternion(VECTOR3D a, QUATERNION q) {}

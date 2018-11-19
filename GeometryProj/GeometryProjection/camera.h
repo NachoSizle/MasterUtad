@@ -13,6 +13,12 @@ typedef struct {
     
 } CAMERA;
 
+typedef struct {
+    float yaw; // Rotation around the Y axis.
+    float pitch; // Rotation around the X axis.
+    float roll; // Rotation around the Z axis.
+    QUATERNION orientation; // Cached quaternion equivalent of this euler object.
+} EULER;
 
 typedef struct {
     double left;

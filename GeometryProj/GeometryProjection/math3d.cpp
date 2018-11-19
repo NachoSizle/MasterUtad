@@ -94,7 +94,10 @@ VECTOR3D Transform(MATRIX3 m, VECTOR3D a) {
 }
 QUATERNION QuaternionFromAngleAxis(float angle, VECTOR3D axis){
     VECTOR3D norm = Normalized(axis);
-    
+    QUATERNION qua;
+    qua.vec = norm;
+    qua.angle = angle;
+    return qua;
 }
 //QUATERNION Multiply(QUATERNION a, QUATERNION b) {}
 //QUATERNION Conjugate(QUATERNION a) {}

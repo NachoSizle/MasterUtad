@@ -95,12 +95,12 @@ void Display(void)
 	double farValue = 10000;
     
     double aspectRatio  = camera.screenwidth / (double)camera.screenheight;
-    //FRUSTUM centerFrustum = makeFrustum(camera.aperture, aspectRatio, nearValue, farValue);
+    FRUSTUM centerFrustum = makeFrustum(camera.aperture, aspectRatio, nearValue, farValue);
     
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-	gluPerspective(camera.aperture, aspectRatio, nearValue, farValue);//QUITAR
-	//glFrustum(centerFrustum.left, centerFrustum.right, centerFrustum.bottom, centerFrustum.top, centerFrustum.nearValue, centerFrustum.farValue);
+//    gluPerspective(camera.aperture, aspectRatio, nearValue, farValue);//QUITAR
+	glFrustum(centerFrustum.left, centerFrustum.right, centerFrustum.bottom, centerFrustum.top, centerFrustum.nearValue, centerFrustum.farValue);
     
     glMatrixMode(GL_MODELVIEW);
     

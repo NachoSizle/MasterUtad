@@ -15,6 +15,10 @@ typedef struct {
     double x,y,z;
 } VECTOR3D;
 
+typedef struct {
+    double angle;
+    VECTOR3D vec;
+} QUATERNION;
 
 typedef struct {
     double r,g,b;

@@ -99,7 +99,7 @@ void Display(void)
     
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-//    gluPerspective(camera.aperture, aspectRatio, nearValue, farValue);//QUITAR
+	//gluPerspective(camera.aperture, aspectRatio, nearValue, farValue);//QUITAR
 	glFrustum(centerFrustum.left, centerFrustum.right, centerFrustum.bottom, centerFrustum.top, centerFrustum.nearValue, centerFrustum.farValue);
     
     glMatrixMode(GL_MODELVIEW);
@@ -132,6 +132,11 @@ void Render(void)
     glRotatef(rotateangle,0.0,1.0,0.0);
 
     drawAxis();
+    
+    //LINE lineToShow;
+    //lineToShow.P.push_back({ 0,0,0 });
+    //lineToShow.P.push_back({120, 120, 0});
+    //drawLine(lineToShow, blue, false);
     
     glPopMatrix();
 }

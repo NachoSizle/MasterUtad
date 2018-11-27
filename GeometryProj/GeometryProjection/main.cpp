@@ -22,7 +22,12 @@ void Lighting(void);
 void InitCamera(int);
 void HandleKeyboard(unsigned char key,int x, int y);
 void HandleReshape(int,int);
+void HandleMouseMotion(int,int);
+void HandleMousePassiveMotion(int,int);
+void UpdateEulerOrientation(EULER);
 void HandleIdle(void);
+void SetCameraPosition(int);
+VECTOR3D GetForward(QUATERNION);
 
 int fullscreen = FALSE;
 
@@ -33,7 +38,6 @@ float t = 0;
 
 CAMERA camera;
 FRUSTUM centerFrustum;
-
 
 double rotateangle = 0;
 
@@ -49,11 +53,14 @@ int main(int argc,char **argv)
     glutCreateWindow("Geometria Proyectiva");
     if (fullscreen)
         glutFullScreen();
-    glutDisplayFunc( Display);
+    glutDisplayFunc(Display);
     glutReshapeFunc(HandleReshape);
-    glutReshapeWindow(camera.screenwidth,camera.screenheight);
+    glutReshapeWindow(camera.screenwidth, camera.screenheight);
     glutIdleFunc(HandleIdle);
     glutKeyboardFunc(HandleKeyboard);
+    glutMotionFunc(HandleMouseMotion);
+    glutPassiveMotionFunc(HandleMousePassiveMotion);
+    
     Init();
     InitCamera(0);
     Lighting();
@@ -99,16 +106,14 @@ void Display(void)
     
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-	//gluPerspective(camera.aperture, aspectRatio, nearValue, farValue);//QUITAR
 	glFrustum(centerFrustum.left, centerFrustum.right, centerFrustum.bottom, centerFrustum.top, centerFrustum.nearValue, centerFrustum.farValue);
     
     glMatrixMode(GL_MODELVIEW);
     
     glLoadIdentity();
     VECTOR3D target = Add(camera.position, camera.direction);
-    //gluLookAt(camera.position.x,camera.position.y,camera.position.z, target.x , target.y, target.z, camera.up.x,camera.up.y,camera.up.z); //QUITAR
     
-// TODO
+    // TODO
     MATRIX4 lookAtMatrix = lookAt(camera.position, target, camera.up);
     glLoadMatrixf(lookAtMatrix.m);
 
@@ -133,10 +138,63 @@ void Render(void)
 
     drawAxis();
     
-    //LINE lineToShow;
-    //lineToShow.P.push_back({ 0,0,0 });
-    //lineToShow.P.push_back({120, 120, 0});
-    //drawLine(lineToShow, blue, false);
+//    // SHOW CUBE
+//    LINE lineToShow;
+//    lineToShow.P.push_back({1, 0, 1});
+//    lineToShow.P.push_back({1, 0, 2});
+//    lineToShow.P.push_back({1, 1, 2});
+//    lineToShow.P.push_back({1, 1, 1});
+//
+//    lineToShow.P.push_back({2, 1, 1});
+//    lineToShow.P.push_back({2, 1, 2});
+//    lineToShow.P.push_back({2, 0, 1});
+//    lineToShow.P.push_back({2, 0, 2});
+//    drawLine(lineToShow, blue, true);
+    
+    glBegin(GL_QUADS);                // Begin drawing the color cube with 6 quads
+    // Top face (y = 1.0f)
+    // Define vertices in counter-clockwise (CCW) order with normal pointing out
+    glColor3f(0.0f, 1.0f, 0.0f);     // Green
+    glVertex3f( 1.0f, 1.0f, -1.0f);
+    glVertex3f(-1.0f, 1.0f, -1.0f);
+    glVertex3f(-1.0f, 1.0f,  1.0f);
+    glVertex3f( 1.0f, 1.0f,  1.0f);
+    
+    // Bottom face (y = -1.0f)
+    glColor3f(1.0f, 0.5f, 0.0f);     // Orange
+    glVertex3f( 1.0f, -1.0f,  1.0f);
+    glVertex3f(-1.0f, -1.0f,  1.0f);
+    glVertex3f(-1.0f, -1.0f, -1.0f);
+    glVertex3f( 1.0f, -1.0f, -1.0f);
+    
+    // Front face  (z = 1.0f)
+    glColor3f(1.0f, 0.0f, 0.0f);     // Red
+    glVertex3f( 1.0f,  1.0f, 1.0f);
+    glVertex3f(-1.0f,  1.0f, 1.0f);
+    glVertex3f(-1.0f, -1.0f, 1.0f);
+    glVertex3f( 1.0f, -1.0f, 1.0f);
+    
+    // Back face (z = -1.0f)
+    glColor3f(1.0f, 1.0f, 0.0f);     // Yellow
+    glVertex3f( 1.0f, -1.0f, -1.0f);
+    glVertex3f(-1.0f, -1.0f, -1.0f);
+    glVertex3f(-1.0f,  1.0f, -1.0f);
+    glVertex3f( 1.0f,  1.0f, -1.0f);
+    
+    // Left face (x = -1.0f)
+    glColor3f(0.0f, 0.0f, 1.0f);     // Blue
+    glVertex3f(-1.0f,  1.0f,  1.0f);
+    glVertex3f(-1.0f,  1.0f, -1.0f);
+    glVertex3f(-1.0f, -1.0f, -1.0f);
+    glVertex3f(-1.0f, -1.0f,  1.0f);
+    
+    // Right face (x = 1.0f)
+    glColor3f(1.0f, 0.0f, 1.0f);     // Magenta
+    glVertex3f(1.0f,  1.0f, -1.0f);
+    glVertex3f(1.0f,  1.0f,  1.0f);
+    glVertex3f(1.0f, -1.0f,  1.0f);
+    glVertex3f(1.0f, -1.0f, -1.0f);
+    glEnd();  // End of drawing color-cube
     
     glPopMatrix();
 }
@@ -198,6 +256,26 @@ void HandleKeyboard(unsigned char key,int x, int y)
         case 'H':
             InitCamera(0);
             break;
+        // TOP
+        case 'w':
+        case 'W':
+            SetCameraPosition(1);
+            break;
+        //BOTTOM
+        case 's':
+        case 'S':
+            SetCameraPosition(-1);
+            break;
+        // LEFT
+        case 'a':
+        case 'A':
+            SetCameraPosition(-2);
+            break;
+        // RIGHT
+        case 'd':
+        case 'D':
+            SetCameraPosition(2);
+            break;
     }
 }
 
@@ -215,6 +293,102 @@ void HandleReshape(int w,int h)
     camera.screenheight = h;
 }
 
+void HandleMouseMotion(int x, int y){
+    std::cout << "Mouse Motion" << std::endl;
+    std::cout << x << std::endl;
+    std::cout << y << std::endl;
+    
+    camera.position.x = x;
+    camera.position.y = y;
+}
+void HandleMousePassiveMotion(int x, int y){
+    std::cout << "Mouse Passive Motion" << std::endl;
+
+    std::cout << x << std::endl;
+    std::cout << y << std::endl;
+    
+    std::cout << "Camera Position" << std::endl;
+    std::cout << camera.position.x << std::endl;
+    std::cout << camera.position.y << std::endl;
+    std::cout << camera.position.z << std::endl;
+    
+    std::cout << "Camera Direction" << std::endl;
+    std::cout << camera.direction.x << std::endl;
+    std::cout << camera.direction.y << std::endl;
+    std::cout << camera.direction.z << std::endl;
+    
+}
+void UpdateEulerOrientation(EULER euler) {
+//    MATRIX3 spinX;
+//    spinX.column0.x = cos(euler.yaw);
+//    spinX.column0.y = (-1)*sin(euler.yaw);
+//    spinX.column0.z = 0;
+//
+//    spinX.column1.x = sin(euler.yaw);
+//    spinX.column1.y = cos(euler.yaw);
+//    spinX.column1.z = 0;
+//
+//    spinX.column2.x = 0;
+//    spinX.column2.y = 0;
+//    spinX.column2.z = 1;
+//
+//    MATRIX3 spinY;
+//    spinY.column0.x = cos(euler.pitch);
+//    spinY.column0.y = 0;
+//    spinY.column0.z = sin(euler.pitch);
+//
+//    spinY.column1.x = 0;
+//    spinY.column1.y = 1;
+//    spinY.column1.z = 0;
+//
+//    spinY.column2.x = (-1)*sin(euler.pitch);
+//    spinY.column2.y = 0;
+//    spinY.column2.z = cos(euler.pitch);
+//
+//    MATRIX3 spinZ;
+//    spinZ.column0.x = 1;
+//    spinZ.column0.y = 0;
+//    spinZ.column0.z = 0;
+//
+//    spinZ.column1.x = 0;
+//    spinZ.column1.y = cos(euler.roll);
+//    spinZ.column1.z = (-1)*sin(euler.roll);
+//
+//    spinZ.column2.x = 0;
+//    spinZ.column2.y = sin(euler.roll);
+//    spinZ.column2.z = cos(euler.roll);
+    
+    euler.orientation = ToQuaternion(euler.yaw, euler.pitch, euler.roll);
+}
+
+void SetCameraPosition(int move) {
+    switch (move) {
+        // TOP
+        case 1:
+            camera.position.z -= camera.position.z*tSpeed;
+            break;
+        // BOTTOM
+        case -1:
+            camera.position.z += camera.position.z*tSpeed;
+            break;
+        // LEFT
+        case 2:
+            camera.direction.x -= 1 + tSpeed;
+            break;
+        // RIGHT
+        case -2:
+            camera.direction.x += 1 + tSpeed;
+            break;
+    }
+}
+
+VECTOR3D GetForward(QUATERNION qua) {
+    VECTOR3D v;
+    v.x = 0;
+    v.y = 0;
+    v.z = -1;
+    return RotateWithQuaternion(v, qua);
+}
 
 void InitCamera(int mode)
 {
@@ -231,5 +405,6 @@ void InitCamera(int mode)
     camera.up.x = 0;
     camera.up.y = 1;
     camera.up.z = 0;
+
 }
 

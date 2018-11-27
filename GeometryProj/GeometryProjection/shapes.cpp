@@ -2,6 +2,7 @@
 #include <math.h>
 #include "GLInclude.h"
 #include "shapes.h"
+#include <iostream>
 
 void drawAxis() {
 	COLOUR colorsAvailable [3] = {red, green, blue};
@@ -19,7 +20,6 @@ void drawDot(VECTOR3D position, float sradius, COLOUR color)
 {
 	glPushMatrix();
 	glTranslatef(position.x, position.y, position.z);
-
 
 	VECTOR3D p[4], n[4];
 	int STEP = 30;
@@ -65,16 +65,16 @@ void drawDot(VECTOR3D position, float sradius, COLOUR color)
 void drawLine(LINE line, COLOUR color, bool doDrawDots)
 {
 	glColor3f(color.r, color.g, color.b);
-	if (!doDrawDots) {
-		glBegin(GL_LINE_STRIP);
-		for (int i = 0; i < line.P.size(); i++) {
-			VECTOR3D vec = line.P[i];
-			glVertex3f(vec.x, vec.y, vec.z);
-		}
-		glEnd();
-	}
-	else {
-		drawDot(line.P[0]);
-		drawDot(line.P[line.P.size() - 1]);
+    glBegin(GL_LINE_STRIP);
+    for (int i = 0; i < line.P.size(); i++) {
+        VECTOR3D vec = line.P[i];
+        glVertex3f(vec.x, vec.y, vec.z);
+    }
+    glEnd();
+	if (doDrawDots) {
+        for (int i = 0; i < line.P.size(); i++) {
+            VECTOR3D vec = line.P[i];
+            drawDot(vec, 0.1, blue);
+        }
 	}
 }

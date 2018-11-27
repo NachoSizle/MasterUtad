@@ -10,7 +10,6 @@ typedef struct {
     
     double aperture;    // in degrees
     int screenwidth,screenheight;
-    
 } CAMERA;
 
 typedef struct {

@@ -61,12 +61,18 @@ VECTOR3D CrossProduct(VECTOR3D a, VECTOR3D b);
 //
 double DotProduct(VECTOR3D a, VECTOR3D b);
 //
-//MATRIX3 Transpose(MATRIX3 m);
+MATRIX3 Transpose(MATRIX3 m);
 //
-//VECTOR3D Transform (MATRIX3 m, VECTOR3D a);
+VECTOR3D Transform(MATRIX3 m, VECTOR3D a);
 //
-
 MATRIX4 InverseOrthogonalMatrix(MATRIX3 A, VECTOR3D t);
-
+//
+QUATERNION Multiply(QUATERNION a, QUATERNION b);
+//
+VECTOR3D RotateWithQuaternion(VECTOR3D a, QUATERNION q);
+//
+QUATERNION QuaternionFromToVectors(VECTOR3D from, VECTOR3D to);
+//
+QUATERNION ToQuaternion(double yaw, double pitch, double roll);
 
 #endif

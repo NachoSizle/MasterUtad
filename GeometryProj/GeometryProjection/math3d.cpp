@@ -92,11 +92,23 @@ VECTOR3D Transform(MATRIX3 m, VECTOR3D a) {
 	res.z = ((m.column0.z * a.x) + (m.column1.z * a.y) + (m.column2.z * a.z));
 	return res;
 }
+
+float Norm(QUATERNION a) {
+    return (a.angle*a.angle + a.vec.x*a.vec.x + a.vec.y*a.vec.y + a.vec.z*a.vec.z);
+}
+
+float QuaMagnitude(QUATERNION qua) {
+    float quaNorm = Norm(qua);
+    return sqrt(quaNorm);
+}
+
 QUATERNION QuaternionFromAngleAxis(float angle, VECTOR3D axis){
     VECTOR3D norm = Normalized(axis);
     QUATERNION qua;
-    qua.vec = norm;
-    qua.angle = angle;
+    qua.vec.x = norm.x * sin(angle/2);
+    qua.vec.y = norm.y * sin(angle/2);
+    qua.vec.z = norm.z * sin(angle/2);
+    qua.angle = cos(angle/2);
     return qua;
 }
 QUATERNION Multiply(QUATERNION a, QUATERNION b) {
@@ -132,10 +144,6 @@ QUATERNION Conjugate(QUATERNION a) {
     return qua;
 }
 
-float Norm(QUATERNION a) {
-    return (a.angle*a.angle + a.vec.x*a.vec.x + a.vec.y*a.vec.y + a.vec.z*a.vec.z);
-}
-
 QUATERNION Scale(QUATERNION a, float esc) {
     QUATERNION qua;
     qua.angle = a.angle * esc;
@@ -143,6 +151,10 @@ QUATERNION Scale(QUATERNION a, float esc) {
     qua.vec.y = a.vec.y * esc;
     qua.vec.z = a.vec.z * esc;
     return qua;
+}
+
+QUATERNION UnitQuaternion(QUATERNION qua) {
+    return Scale(qua, 1/QuaMagnitude(qua));
 }
 
 QUATERNION Inverse(QUATERNION a) {
@@ -197,9 +209,12 @@ MATRIX4 InverseOrthogonalMatrix(MATRIX3 A, VECTOR3D t)
 }
 
 QUATERNION QuaternionFromToVectors(VECTOR3D from, VECTOR3D to) {
-    QUATERNION quaFrom = ToQuaternion(from.z, from.y, from.x);
-    QUATERNION quaTo = ToQuaternion(to.z, to.y, to.x);
-    return Multiply(quaFrom, quaTo);
+    VECTOR3D vec = CrossProduct(from, to);
+    float angle = DotProduct(from, to);
+    QUATERNION aux;
+    aux.vec = vec;
+    aux.angle = angle;
+    return aux;
 }
 
 QUATERNION ToQuaternion(double yaw, double pitch, double roll) // yaw (Z), pitch (Y), roll (X)

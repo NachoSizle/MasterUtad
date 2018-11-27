@@ -27,6 +27,7 @@ void HandleMousePassiveMotion(int,int);
 void UpdateEulerOrientation(EULER);
 void HandleIdle(void);
 void SetCameraPosition(int);
+VECTOR3D GetForward(QUATERNION);
 
 int fullscreen = FALSE;
 
@@ -296,6 +297,9 @@ void HandleMouseMotion(int x, int y){
     std::cout << "Mouse Motion" << std::endl;
     std::cout << x << std::endl;
     std::cout << y << std::endl;
+    
+    camera.position.x = x;
+    camera.position.y = y;
 }
 void HandleMousePassiveMotion(int x, int y){
     std::cout << "Mouse Passive Motion" << std::endl;
@@ -304,13 +308,57 @@ void HandleMousePassiveMotion(int x, int y){
     std::cout << y << std::endl;
     
     std::cout << "Camera Position" << std::endl;
+    std::cout << camera.position.x << std::endl;
+    std::cout << camera.position.y << std::endl;
+    std::cout << camera.position.z << std::endl;
     
-    std::cout << camera.up.x << std::endl;
-    std::cout << camera.up.y << std::endl;
-    std::cout << camera.up.z << std::endl;
+    std::cout << "Camera Direction" << std::endl;
+    std::cout << camera.direction.x << std::endl;
+    std::cout << camera.direction.y << std::endl;
+    std::cout << camera.direction.z << std::endl;
+    
 }
 void UpdateEulerOrientation(EULER euler) {
+//    MATRIX3 spinX;
+//    spinX.column0.x = cos(euler.yaw);
+//    spinX.column0.y = (-1)*sin(euler.yaw);
+//    spinX.column0.z = 0;
+//
+//    spinX.column1.x = sin(euler.yaw);
+//    spinX.column1.y = cos(euler.yaw);
+//    spinX.column1.z = 0;
+//
+//    spinX.column2.x = 0;
+//    spinX.column2.y = 0;
+//    spinX.column2.z = 1;
+//
+//    MATRIX3 spinY;
+//    spinY.column0.x = cos(euler.pitch);
+//    spinY.column0.y = 0;
+//    spinY.column0.z = sin(euler.pitch);
+//
+//    spinY.column1.x = 0;
+//    spinY.column1.y = 1;
+//    spinY.column1.z = 0;
+//
+//    spinY.column2.x = (-1)*sin(euler.pitch);
+//    spinY.column2.y = 0;
+//    spinY.column2.z = cos(euler.pitch);
+//
+//    MATRIX3 spinZ;
+//    spinZ.column0.x = 1;
+//    spinZ.column0.y = 0;
+//    spinZ.column0.z = 0;
+//
+//    spinZ.column1.x = 0;
+//    spinZ.column1.y = cos(euler.roll);
+//    spinZ.column1.z = (-1)*sin(euler.roll);
+//
+//    spinZ.column2.x = 0;
+//    spinZ.column2.y = sin(euler.roll);
+//    spinZ.column2.z = cos(euler.roll);
     
+    euler.orientation = ToQuaternion(euler.yaw, euler.pitch, euler.roll);
 }
 
 void SetCameraPosition(int move) {
@@ -325,13 +373,21 @@ void SetCameraPosition(int move) {
             break;
         // LEFT
         case 2:
-            camera.position.x += 1 + tSpeed;
+            camera.direction.x -= 1 + tSpeed;
             break;
         // RIGHT
         case -2:
-            camera.position.x -= 1 + tSpeed;
+            camera.direction.x += 1 + tSpeed;
             break;
     }
+}
+
+VECTOR3D GetForward(QUATERNION qua) {
+    VECTOR3D v;
+    v.x = 0;
+    v.y = 0;
+    v.z = -1;
+    return RotateWithQuaternion(v, qua);
 }
 
 void InitCamera(int mode)
@@ -349,5 +405,6 @@ void InitCamera(int mode)
     camera.up.x = 0;
     camera.up.y = 1;
     camera.up.z = 0;
+
 }
 

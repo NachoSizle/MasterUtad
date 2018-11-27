@@ -99,9 +99,74 @@ QUATERNION QuaternionFromAngleAxis(float angle, VECTOR3D axis){
     qua.angle = angle;
     return qua;
 }
-//QUATERNION Multiply(QUATERNION a, QUATERNION b) {}
-//QUATERNION Conjugate(QUATERNION a) {}
-//VECTOR3D RotateWithQuaternion(VECTOR3D a, QUATERNION q) {}
+QUATERNION Multiply(QUATERNION a, QUATERNION b) {
+    float angle = a.angle*b.angle - a.vec.x*b.vec.x - a.vec.y*b.vec.y - a.vec.z*b.vec.z;
+    
+    float xCoorQua = a.angle*b.vec.x + a.vec.x*b.angle + a.vec.y*b.vec.z - a.vec.z*b.vec.y;
+    float yCoorQua = a.angle*b.vec.y + a.vec.y*b.angle + a.vec.z*b.vec.x - a.vec.x*b.vec.z;
+    float zCoorQua = a.angle*b.vec.z + a.vec.z*b.angle + a.vec.x*b.vec.y - a.vec.y*b.vec.x;
+    
+    VECTOR3D vec;
+    vec.x = xCoorQua;
+    vec.y = yCoorQua;
+    vec.z = zCoorQua;
+    
+    QUATERNION qua;
+    qua.angle = angle;
+    qua.vec = vec;
+    
+    return qua;
+}
+QUATERNION Conjugate(QUATERNION a) {
+    
+    QUATERNION qua;
+    qua.angle = a.angle;
+    
+    VECTOR3D vec;
+    vec.x = -1*a.vec.x;
+    vec.y = -1*a.vec.y;
+    vec.z = -1*a.vec.z;
+    
+    qua.vec = vec;
+    
+    return qua;
+}
+
+float Norm(QUATERNION a) {
+    return (a.angle*a.angle + a.vec.x*a.vec.x + a.vec.y*a.vec.y + a.vec.z*a.vec.z);
+}
+
+QUATERNION Scale(QUATERNION a, float esc) {
+    QUATERNION qua;
+    qua.angle = a.angle * esc;
+    qua.vec.x = a.vec.x * esc;
+    qua.vec.y = a.vec.y * esc;
+    qua.vec.z = a.vec.z * esc;
+    return qua;
+}
+
+QUATERNION Inverse(QUATERNION a) {
+    QUATERNION qua = Conjugate(a);
+    float normQua = Norm(qua);
+    return Scale(qua, 1/normQua);
+}
+VECTOR3D RotateWithQuaternion(VECTOR3D a, QUATERNION q) {
+    QUATERNION quaFromVec;
+    quaFromVec.angle = 0;
+    quaFromVec.vec.x = a.x;
+    quaFromVec.vec.y = a.y;
+    quaFromVec.vec.z = a.z;
+    
+    QUATERNION inverted = Inverse(q);
+    QUATERNION aux = Multiply(q, quaFromVec);
+    QUATERNION auxFromInv = Multiply(aux, inverted);
+    
+    VECTOR3D vec;
+    vec.x = auxFromInv.vec.x;
+    vec.y = auxFromInv.vec.y;
+    vec.z = auxFromInv.vec.z;
+    return vec;
+}
 MATRIX4 InverseOrthogonalMatrix(MATRIX3 A, VECTOR3D t)
 {
 	MATRIX4 sol;
@@ -129,4 +194,28 @@ MATRIX4 InverseOrthogonalMatrix(MATRIX3 A, VECTOR3D t)
 	sol.m[15] = 1;
 
 	return sol;
+}
+
+QUATERNION QuaternionFromToVectors(VECTOR3D from, VECTOR3D to) {
+    QUATERNION quaFrom = ToQuaternion(from.z, from.y, from.x);
+    QUATERNION quaTo = ToQuaternion(to.z, to.y, to.x);
+    return Multiply(quaFrom, quaTo);
+}
+
+QUATERNION ToQuaternion(double yaw, double pitch, double roll) // yaw (Z), pitch (Y), roll (X)
+{
+    // Abbreviations for the various angular functions
+    double cy = cos(yaw * 0.5);
+    double sy = sin(yaw * 0.5);
+    double cp = cos(pitch * 0.5);
+    double sp = sin(pitch * 0.5);
+    double cr = cos(roll * 0.5);
+    double sr = sin(roll * 0.5);
+    
+    QUATERNION q;
+    q.angle = cy * cp * cr + sy * sp * sr;
+    q.vec.x = cy * cp * sr - sy * sp * cr;
+    q.vec.y = sy * cp * sr + cy * sp * cr;
+    q.vec.z = sy * cp * cr - cy * sp * sr;
+    return q;
 }

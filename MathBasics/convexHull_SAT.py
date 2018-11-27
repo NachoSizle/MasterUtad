@@ -172,95 +172,82 @@ def prod_escalar(v1, v2):
     return ((v1[0]*v2[0])+(v1[1]*v2[1]))
 
 
-# def calcCollision(polygon_list):
+def calcCollisionDEF(polygon_list):
+    # Eje de proyeccion
+        # perpendicular (-y,x)
+    # Sacar las proyecciones a ese eje
+        # Proyectar todos los lados del poligono que he sacado el plano de proyeccion
+            # Cada proyeccion es ((prod_escalar(lado a probar, plano de proyeccion)) / (mod(plano de proyeccion)^2)) * vector(plano de proyeccion)
+        # Una vez proyectados todos los lados, cogemos la coordenada mas pequeña de las pequeñas y la mas grande de las grandes -->
+        # toda la proyeccion del polígono en el plano
 
-#     max_right_point_pol_one = getMaxRightPoint(polygon_list[0].point_list)
-#     max_right_point_pol_two = getMaxRightPoint(polygon_list[1].point_list)
+        # Repetir los 3 pasos anteriores con el otro polígono en el mismo eje de proyeccion
+        # Comprobar si los extremos del primer poligono pertenecen al conjunto de puntos del segundo poligono
+    res = True
+    polygon = polygon_list[0]
+    first_sides = polygon.get_sides()
+    polygon = polygon_list[1]
+    second_sides = polygon.get_sides()
+    init_side = 0
+    origin_point = Point(0, 0)
+    plane_proyection = Vector(Point(0, 0), Point(0, 0))
+    perpen_plane = plane_proyection
 
-#     pol_left = 0
-#     pol_right = 1
+    for side in first_sides:
+        if res:
+            init_side = side
 
-#     if (max_right_point_pol_one.x > max_right_point_pol_two.x):
-#         pol_left = 1
-#         pol_right = 0
+            plane_proyection.vec = init_side.change_vector()  # REVISAR
 
-#     print("*********************************************")
-#     print("POL LEFT: {}".format(pol_left))
-#     print("POL RIGHT: {}".format(pol_right))
+            print(init_side.point_a)
+            print(init_side.point_b)
+            print(plane_proyection.vec)
+            print("-----------------")
+            perpen_plane.vec = [
+                plane_proyection.vec[1], plane_proyection.vec[0]]
+            mod_perpen_plane = math.sqrt(
+                (perpen_plane.vec[0])**2+(perpen_plane.vec[1])**2)
 
-#     max_right_point = getMaxRightPoint(polygon_list[pol_left].point_list)
-#     max_left_point = getMaxLeftPoint(polygon_list[pol_right].point_list)
-#     max_top_point = getMaxTopPoint(polygon_list[pol_left].point_list)
-#     max_bottom_point = getMaxBottomPoint(polygon_list[pol_right].point_list)
+            proy_origin_first_polygon = []
+            proy_origin_second_polygon = []
 
-#     print("*********************************************")
-#     print("MAX RIGHT POINT: {}".format(max_right_point))
-#     print("MAX LEFT POINT: {}".format(max_left_point))
-#     print("MAX TOP POINT: {}".format(max_top_point))
-#     print("MAX BOTTOM POINT: {}".format(max_bottom_point))
-#     print("*********************************************")
+            for side_first in first_sides:
+                point = side_first.point_a
+                vec = Vector(origin_point, point)
+                proy = (prod_escalar(vec.vec, perpen_plane.vec) /
+                        mod_perpen_plane)
+                proy_origin_first_polygon.append(proy)
 
-#     vector_module_x = max_left_point.x - max_right_point.x
+            proyections_first_polygon = []
+            proyections_first_polygon.append(min(proy_origin_first_polygon))
+            proyections_first_polygon.append(max(proy_origin_first_polygon))
 
-#     print("Distance X AXIS: {}".format(vector_module_x))
-#     if vector_module_x <= 0:
-#         vector_module_y = max_bottom_point.y - max_top_point.y
-#         plt.xlabel("{}: {}".format("Collision", True))
-#         print("Distance Y AXIS: {}".format(vector_module_y))
+            for side_second in second_sides:
+                point = side_second.point_a
+                vec = Vector(origin_point, point)
+                proy = (prod_escalar(vec.vec, perpen_plane.vec) /
+                        mod_perpen_plane)
 
-#         if vector_module_y <= 0:
-#             plt.ylabel("{}: {}".format("Collision", True))
+                proy_origin_second_polygon.append(proy)
 
-#         plt.ylabel("{}: {}".format("Collision", "Not important!"))
-#         return True
+            proyections_second_polygon = []
+            proyections_second_polygon.append(min(proy_origin_second_polygon))
+            proyections_second_polygon.append(max(proy_origin_second_polygon))
 
-#     plt.xlabel("{}: {}".format("Collision", False))
-#     plt.ylabel("{}: {}".format("Collision", False))
-#     return False
+            print(proyections_first_polygon)
+            print("-----------------")
+            print(proyections_second_polygon)
+            print("-----------------")
+            min_first = proyections_first_polygon[0]
+            max_first = proyections_first_polygon[1]
+            min_second = proyections_second_polygon[0]
+            max_second = proyections_second_polygon[1]
+            if ((max_first >= min_second) and (max_second < min_first)) or (max_first < min_second):
+                res = False
+            # if ((max_first >= min_second) and (max_second > min_first)) or (max_first >= min_second):
+            #     res = True
+    return res
 
-
-# def getMaxLeftPoint(list):
-#     min = 100000
-#     max = -100000
-#     ptoRes = Point(min, max)
-#     for pto in list:
-#         if pto.x < min:
-#             ptoRes = pto
-#             min = pto.x
-#     return ptoRes
-
-
-# def getMaxRightPoint(list):
-#     min = 100000
-#     max = -100000
-#     ptoRes = Point(min, max)
-#     for pto in list:
-#         if pto.x > max:
-#             ptoRes = pto
-#             max = pto.x
-#     return ptoRes
-
-
-# def getMaxBottomPoint(list):
-#     min = -100000
-#     max = 100000
-#     ptoRes = Point(min, max)
-#     for pto in list:
-#         if pto.y < max:
-#             ptoRes = pto
-#             max = pto.y
-#     return ptoRes
-
-
-# def getMaxTopPoint(list):
-#     min = -100000
-#     max = -100000
-#     ptoRes = Point(min, max)
-#     for pto in list:
-#         if pto.y > max:
-#             ptoRes = pto
-#             max = pto.y
-#     return ptoRes
 
 def calcCollision(polygon_list):
     # Eje de proyeccion
@@ -427,16 +414,17 @@ def check_collision(polygon_one, polygon_two):
 
     return collision
 
+
     # ******************** INIT PROGRAM ******************
 polygon_list = []
 for i in range(2):
     point_list = []
 
     for x in range(10):
-        point = Point(random.randint((10 * i) - 3 * i, 10 * (i + 1)),
-                      random.randint(10 * i, 10 * (i + 1)))
-        # point = Point(random.randint(0, 30),
-        #               random.randint(0, 30))
+        # point = Point(random.randint((10 * i) - 3 * i, 10 * (i + 1)),
+        #               random.randint(10 * i, 10 * (i + 1)))
+        point = Point(random.randint(0, 30),
+                      random.randint(0, 30))
         point_list.append(point)
 
     polygon = Polygon(point_list)
@@ -461,7 +449,7 @@ for i in range(2):
 
 print("*********************************************")
 print("CALC COLLISION")
-is_collision = calcCollision(polygon_list)
+is_collision = calcCollisionDEF(polygon_list)
 print("*********************************************")
 
 print("{}: {}".format("COLLISION", is_collision))

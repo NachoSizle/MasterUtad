@@ -390,10 +390,10 @@ def calcCollision(polygon_list):
         # print("RESULT TWO: {}".format(second_polygon))
         # print("************************************")
         res = True
+        collisions.append([max_proy_first_polygon,
+                           min_proy_second_polygon])
         if max_proy_first_polygon < min_proy_second_polygon:
             res = False
-            collisions = [max_proy_first_polygon,
-                          min_proy_second_polygon]
             median = ((min_proy_second_polygon - max_proy_first_polygon) /
                       2) + min_proy_second_polygon
             median_point = Point(median, plane_proyection.vec[1])
@@ -415,7 +415,10 @@ def calcCollision(polygon_list):
             plt.plot([pto_inf.x, pto_sup.x], [pto_inf.y, pto_sup.y],
                      "go-", linewidth=1, markersize=6)
             break
+        if res == False:
+            return res
     print("RESULT:***************")
+    print(collisions)
     return res
 
 
@@ -424,13 +427,12 @@ def check_collision(polygon_one, polygon_two):
 
     return collision
 
-
     # ******************** INIT PROGRAM ******************
 polygon_list = []
 for i in range(2):
     point_list = []
 
-    for x in range(6):
+    for x in range(10):
         point = Point(random.randint((10 * i) - 3 * i, 10 * (i + 1)),
                       random.randint(10 * i, 10 * (i + 1)))
         # point = Point(random.randint(0, 30),

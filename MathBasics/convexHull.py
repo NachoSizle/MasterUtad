@@ -103,7 +103,6 @@ def getQuickHull(pol, num, pointA, pointB, side, polRes):
             polRes.append(pointB)
         return
 
-    # Si no encuentra un punto que cumpla la condición de ComvexHull, se hacen las llamadas recursivas
     getQuickHull(pol, num, pol[ind], pointA, -
                  area2(pol[ind], pointA, pointB), polRes)
     getQuickHull(pol, num, pol[ind], pointB, -
@@ -145,11 +144,6 @@ for x in range(10):
 
 polygon = Polygon(point_list)
 convex_hull = polygon.getConvexHull()
-
-print("POLYGON")
-print(polygon)
-print("CONVEX HULL")
-print(convex_hull)
 
 x_coor = []
 y_coor = []
